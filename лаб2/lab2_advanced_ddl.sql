@@ -1,28 +1,3 @@
-DO $$
-BEGIN
-  IF EXISTS (SELECT 1 FROM pg_database WHERE datname = 'university_test' AND datistemplate) THEN
-    -- Временно разрешаем изменение системного каталога
-    PERFORM pg_catalog.set_config('allow_system_table_mods','on', true);
-    UPDATE pg_database SET datistemplate = FALSE WHERE datname = 'university_test';
-  END IF;
-END$$;
-
-DO $$
-BEGIN
-  IF EXISTS (SELECT 1 FROM pg_database WHERE datname = 'university_main') THEN
-    PERFORM pg_terminate_backend(pid) FROM pg_stat_activity
-      WHERE datname = 'university_main' AND pid <> pg_backend_pid();
-  END IF;
-  IF EXISTS (SELECT 1 FROM pg_database WHERE datname = 'university_archive') THEN
-    PERFORM pg_terminate_backend(pid) FROM pg_stat_activity
-      WHERE datname = 'university_archive' AND pid <> pg_backend_pid();
-  END IF;
-  IF EXISTS (SELECT 1 FROM pg_database WHERE datname = 'university_test') THEN
-    PERFORM pg_terminate_backend(pid) FROM pg_stat_activity
-      WHERE datname = 'university_test' AND pid <> pg_backend_pid();
-  END IF;
-END$$;
-
 -- ВСЕ КОМЕНТАРИЙ НУЖНЫ ДЛЯ ПОДГОТОВКИ (НЕ УДАЛЯТЬ)
 -- Task 1.1
 DROP DATABASE IF EXISTS university_main;
@@ -322,6 +297,3 @@ WHERE datname = 'university_main'
 DROP DATABASE IF EXISTS university_backup;
 CREATE DATABASE university_backup
     TEMPLATE = university_main;
-
-    TEMPLATE = university_main;
-
